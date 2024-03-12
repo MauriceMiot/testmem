@@ -1,9 +1,9 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Landing } from '@/screens';
+import { ForgotPassword } from '@/screens';
 
-const LandingPage: NextPage = () => {
-  return <Landing />;
+const ForgotPasswordPage: NextPage = () => {
+  return <ForgotPassword />;
 };
 
 export const getServerSideProps: GetServerSideProps<any> = async () => ({
@@ -12,4 +12,4 @@ export const getServerSideProps: GetServerSideProps<any> = async () => ({
   },
 });
 
-export default LandingPage;
+export default ForgotPasswordPage;

@@ -1,9 +1,14 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Landing } from '@/screens';
+import { Home } from '@/screens';
+import { Layout } from '@/components';
 
-const LandingPage: NextPage = () => {
-  return <Landing />;
+const HomePage: NextPage = () => {
+  return (
+    <Layout>
+      <Home />
+    </Layout>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps<any> = async () => ({
@@ -12,4 +17,4 @@ export const getServerSideProps: GetServerSideProps<any> = async () => ({
   },
 });
 
-export default LandingPage;
+export default HomePage;
