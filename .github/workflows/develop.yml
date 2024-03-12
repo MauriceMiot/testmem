@@ -1,0 +1,52 @@
+name: Deploy Umembr Website
+
+on:
+  workflow_run:
+    workflows: ["Node.js CI"]
+    branches:
+      - "develop"
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build image
+        uses: ironhalik/docker-over-ssh-action@v1
+        env:
+          CI_REGISTRY_PASSWORD: ${{ secrets.SECRET_TOKEN }}
+          CI_REGISTRY: ghcr.io
+          CI_REGISTRY_USER: decode9
+          ENVIRONMENT: DEV
+          REPLICAS: 1
+          NETWORK: umembr-net
+        with:
+          user: dockeruser
+          host: engine.dev.umembrwhen.com
+          key: ${{ secrets.SSH_KEY }}
+          port: 22 # Defaults to 22
+          script: |
+            apk add git
+            git clone https://decode9:$CI_REGISTRY_PASSWORD@github.com/umembr/website-umembr  --branch develop --single-branch
+            cd website-umembr
+            chmod +x -R ./scripts
+            ./scripts/build.sh
+      - name: deploy image
+        uses: ironhalik/docker-over-ssh-action@v1
+        env:
+          CI_REGISTRY_PASSWORD: ${{ secrets.SECRET_TOKEN }}
+          CI_REGISTRY: ghcr.io
+          CI_REGISTRY_USER: decode9
+          ENVIRONMENT: DEV
+          REPLICAS: 1
+          NETWORK: umembr-net
+        with:
+          user: dockeruser
+          host: engine.dev.umembrwhen.com
+          key: ${{ secrets.SSH_KEY }}
+          port: 22 # Defaults to 22
+          script: |
+            cd website-umembr
+            chmod +x -R ./scripts
+            ./scripts/deploy.sh
